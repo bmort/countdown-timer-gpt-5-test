@@ -17,7 +17,7 @@ Short GIF preview of the timer UI. Place a file at `web/public/demo.gif` to rend
 <sub>Placeholder 1×1 GIF to avoid broken image. Replace `web/public/demo.gif` with a real capture when available.</sub>
 
 ## Deploy
-- GitHub Actions: On push to `main`, the workflow in `.github/workflows/pages.yml` runs tests, builds `web/`, and deploys to GitHub Pages.
+- GitHub Actions: On push to `main`, the workflow in `.github/workflows/pages.yml` lints, tests, builds `web/`, and deploys to GitHub Pages.
 - Base path: Set automatically based on repo name (project pages → `/<repo>/`, user/org pages → `/`).
 - Settings: Ensure GitHub Pages source is set to “GitHub Actions” (repo Settings → Pages).
 
