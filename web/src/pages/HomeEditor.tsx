@@ -59,7 +59,10 @@ export function HomeEditor() {
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr]">
       <header className="px-6 py-4 border-b ui-border flex items-center justify-between ui-panel sticky top-0 backdrop-blur">
-        <h1 className="text-xl font-semibold font-inter">Countdown Timer</h1>
+        <div>
+          <h1 className="text-xl font-semibold font-inter">Countdown Timer</h1>
+          <p className="text-xs text-white/60 mt-0.5">vibed out by @Ben Mort</p>
+        </div>
         <div className="flex items-center gap-3">
           <a className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" href="/timer">Player</a>
           <ThemeToggle />
