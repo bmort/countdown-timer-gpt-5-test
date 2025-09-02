@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { DateTime, Duration } from 'luxon'
 import { useTimerConfig, parseDurationToMs, serializeConfigToQuery } from '../state/config'
 import { useGoogleFont } from '../hooks/useGoogleFont'
@@ -252,7 +252,7 @@ function Controls({ isRunning, onToggle, onReset, backHref }: { isRunning: boole
       <button className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
       <button className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" onClick={onReset}>Reset</button>
       <button className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" onClick={toggleFullscreen}>Full-screen</button>
-      <a className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" href={backHref}>Back to Config</a>
+      <Link className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" to={backHref}>Back to Config</Link>
     </div>
   )
 }
