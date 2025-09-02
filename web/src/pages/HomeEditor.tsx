@@ -93,7 +93,7 @@ export function HomeEditor() {
 
           {config.mode === 'duration' ? (
             <div className="space-y-3">
-              <label className="block text-sm ui-label">Duration (h,m,s)</label>
+              <label className="block text-sm ui-label">Duration (Examples: 1h30m, 90m, 01:30:00)</label>
               <div className="flex items-center gap-2">
                 <div className="relative group">
                   <input
