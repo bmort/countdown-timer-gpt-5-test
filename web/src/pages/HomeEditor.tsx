@@ -188,7 +188,7 @@ export function HomeEditor() {
               <select
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 value={config.titleSize ?? 'm'}
-                onChange={(e) => updateConfig({ titleSize: e.target.value as any })}
+                onChange={(e) => updateConfig({ titleSize: e.target.value as 's' | 'm' | 'l' | 'xl' })}
               >
                 <option value="s">Small</option>
                 <option value="m">Medium</option>
@@ -225,7 +225,7 @@ export function HomeEditor() {
               <select
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 value={config.fs}
-                onChange={(e) => updateConfig({ fs: e.target.value as any })}
+                onChange={(e) => updateConfig({ fs: e.target.value as 's' | 'm' | 'l' | 'xl' })}
               >
                 <option value="s">Small</option>
                 <option value="m">Medium (default)</option>
@@ -247,7 +247,7 @@ export function HomeEditor() {
               <select
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 value={config.fx}
-                onChange={(e) => updateConfig({ fx: e.target.value as any })}
+                onChange={(e) => updateConfig({ fx: e.target.value as ('none' | 'pulse-sec' | 'pulse-min' | 'flip-sec' | 'neon' | 'shake-10s' | 'pop-sec') })}
               >
                 <option value="none">None</option>
                 <option value="pulse-sec">Pulse on seconds</option>
@@ -379,7 +379,7 @@ function CopyUrlButton() {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       setTimeout(() => setCopied(false), 1400)
-    } catch (e) {
+    } catch {
       // Fallback: select/alert if clipboard not available
       window.prompt('Copy URL', url)
     }

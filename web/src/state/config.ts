@@ -71,7 +71,7 @@ export const useTimerConfig = create<Store>((set) => ({
 
 export function serializeConfigToQuery(config: Config): string {
   const params = new URLSearchParams()
-  const add = (k: string, v: any) => {
+  const add = (k: string, v: unknown) => {
     if (v == null) return
     params.set(k, String(v))
   }
@@ -117,23 +117,23 @@ export function applyQueryToConfig(prev: Config, q: Record<string, string>): Con
   }
   next.title = q.title ?? prev.title
   next.titleFont = q.tfont ?? prev.titleFont
-  next.titleSize = (q.tfs as any) ?? prev.titleSize
+  next.titleSize = pick(q.tfs, ['s', 'm', 'l', 'xl']) ?? prev.titleSize
   next.titleColor = q.tfg ?? prev.titleColor
-  next.ui = (q.ui as any) ?? prev.ui
-  next.theme = (q.theme as any) ?? prev.theme
-  next.font = (q.font as any) ?? prev.font
-  next.fs = (q.fs as any) ?? prev.fs
+  next.ui = pick(q.ui, ['0', '1']) ?? prev.ui
+  next.theme = pick(q.theme, ['dark', 'light']) ?? prev.theme
+  next.font = q.font ?? prev.font
+  next.fs = pick(q.fs, ['s', 'm', 'l', 'xl']) ?? prev.fs
   next.fg = q.fg ?? prev.fg
   next.bg = q.bg ?? prev.bg
   next.accent = q.accent ?? prev.accent
-  next.bar = (q.bar as any) ?? prev.bar
-  next.ring = (q.ring as any) ?? prev.ring
-  next.alert = (q.alert as any) ?? prev.alert
+  next.bar = pick(q.bar, ['0', '1']) ?? prev.bar
+  next.ring = pick(q.ring, ['0', '1']) ?? prev.ring
+  next.alert = pick(q.alert, ['none', 'sound', 'flash', 'both']) ?? prev.alert
   next.repeat = q.repeat ?? prev.repeat
   next.repevery = q.repevery ?? prev.repevery
-  next.overrun = (q.overrun as any) ?? prev.overrun
-  next.fullscreen = (q.fullscreen as any) ?? prev.fullscreen
-  next.fx = (q.fx as any) ?? prev.fx
+  next.overrun = pick(q.overrun, ['0', '1']) ?? prev.overrun
+  next.fullscreen = pick(q.fullscreen, ['0', '1']) ?? prev.fullscreen
+  next.fx = pick(q.fx, ['none', 'pulse-sec', 'pulse-min', 'flip-sec', 'neon', 'shake-10s', 'pop-sec']) ?? prev.fx
   return next
 }
 
@@ -175,4 +175,9 @@ export function parseDurationToMs(d?: string): number {
     else if (p.endsWith('s')) seconds += Number(p.slice(0, -1))
   }
   return ((hours * 60 + minutes) * 60 + seconds) * 1000
+}
+
+function pick<T extends readonly string[]>(v: string | undefined, allowed: T): T[number] | undefined {
+  if (!v) return undefined
+  return (allowed as readonly string[]).includes(v) ? (v as T[number]) : undefined
 }

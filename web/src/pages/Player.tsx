@@ -75,6 +75,8 @@ function TimerView() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+    // We intentionally don't include handleToggle to avoid rebinding per frame
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
