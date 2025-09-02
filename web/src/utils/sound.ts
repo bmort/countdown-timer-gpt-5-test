@@ -6,7 +6,7 @@ type WindowWithWebkitAudio = Window & { webkitAudioContext?: AudioContextConstru
 function getCtx(): AudioContext {
   if (!audioCtx) {
     const w = window as WindowWithWebkitAudio
-    const Ctor: AudioContextConstructor = (w.AudioContext || w.webkitAudioContext) as AudioContextConstructor
+    const Ctor: AudioContextConstructor = (globalThis.AudioContext || w.webkitAudioContext) as AudioContextConstructor
     audioCtx = new Ctor()
   }
   return audioCtx
@@ -32,4 +32,3 @@ export function chimeEnd() {
   setTimeout(() => beep({ frequency: 880, durationMs: 160, volume: 0.12 }), 120)
   setTimeout(() => beep({ frequency: 990, durationMs: 180, volume: 0.12 }), 280)
 }
-

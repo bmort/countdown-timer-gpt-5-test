@@ -117,23 +117,23 @@ export function applyQueryToConfig(prev: Config, q: Record<string, string>): Con
   }
   next.title = q.title ?? prev.title
   next.titleFont = q.tfont ?? prev.titleFont
-  next.titleSize = pick(q.tfs, ['s', 'm', 'l', 'xl']) ?? prev.titleSize
+  next.titleSize = pick(q.tfs, ['s', 'm', 'l', 'xl'] as const) ?? prev.titleSize
   next.titleColor = q.tfg ?? prev.titleColor
-  next.ui = pick(q.ui, ['0', '1']) ?? prev.ui
-  next.theme = pick(q.theme, ['dark', 'light']) ?? prev.theme
+  next.ui = pick(q.ui, ['0', '1'] as const) ?? prev.ui
+  next.theme = pick(q.theme, ['dark', 'light'] as const) ?? prev.theme
   next.font = q.font ?? prev.font
-  next.fs = pick(q.fs, ['s', 'm', 'l', 'xl']) ?? prev.fs
+  next.fs = pick(q.fs, ['s', 'm', 'l', 'xl'] as const) ?? prev.fs
   next.fg = q.fg ?? prev.fg
   next.bg = q.bg ?? prev.bg
   next.accent = q.accent ?? prev.accent
-  next.bar = pick(q.bar, ['0', '1']) ?? prev.bar
-  next.ring = pick(q.ring, ['0', '1']) ?? prev.ring
-  next.alert = pick(q.alert, ['none', 'sound', 'flash', 'both']) ?? prev.alert
+  next.bar = pick(q.bar, ['0', '1'] as const) ?? prev.bar
+  next.ring = pick(q.ring, ['0', '1'] as const) ?? prev.ring
+  next.alert = pick(q.alert, ['none', 'sound', 'flash', 'both'] as const) ?? prev.alert
   next.repeat = q.repeat ?? prev.repeat
   next.repevery = q.repevery ?? prev.repevery
-  next.overrun = pick(q.overrun, ['0', '1']) ?? prev.overrun
-  next.fullscreen = pick(q.fullscreen, ['0', '1']) ?? prev.fullscreen
-  next.fx = pick(q.fx, ['none', 'pulse-sec', 'pulse-min', 'flip-sec', 'neon', 'shake-10s', 'pop-sec']) ?? prev.fx
+  next.overrun = pick(q.overrun, ['0', '1'] as const) ?? prev.overrun
+  next.fullscreen = pick(q.fullscreen, ['0', '1'] as const) ?? prev.fullscreen
+  next.fx = pick(q.fx, ['none', 'pulse-sec', 'pulse-min', 'flip-sec', 'neon', 'shake-10s', 'pop-sec'] as const) ?? prev.fx
   return next
 }
 
