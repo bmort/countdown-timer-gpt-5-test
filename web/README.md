@@ -34,10 +34,16 @@ export default tseslint.config([
         tsconfigRootDir: import.meta.dirname,
       },
       // other options...
-    },
+  },
   },
 ])
 ```
+
+## Demo GIF
+
+- The root README displays a short demo GIF from `web/public/demo.gif`.
+- To create one, see the recording guide at `../scripts/record-demo.md`.
+- In dev, it serves at `http://localhost:5173/demo.gif`.
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
