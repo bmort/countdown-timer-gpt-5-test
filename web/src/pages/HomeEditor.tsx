@@ -105,7 +105,7 @@ export function HomeEditor() {
                   {quickDurations.map((m) => (
                     <button
                       key={m}
-                      className="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20"
+                      className="px-2.5 py-1 rounded-md border ui-border bg-transparent hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-cyan-400/50"
                       onClick={() => updateConfig({ d: `${m}m` })}
                     >
                       {m}m
