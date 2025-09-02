@@ -95,13 +95,22 @@ export function HomeEditor() {
             <div className="space-y-3">
               <label className="block text-sm ui-label">Duration (h,m,s)</label>
               <div className="flex items-center gap-2">
-                <input
-                  className="px-3 py-2 rounded-lg ui-input border ui-border w-40"
-                  placeholder="00h00m00s"
-                  title="Examples: 1h30m, 90m, 01:30:00"
-                  value={config.d ?? ''}
-                  onChange={(e) => updateConfig({ d: e.target.value })}
-                />
+                <div className="relative group">
+                  <input
+                    className="px-3 py-2 rounded-lg ui-input border ui-border w-40"
+                    placeholder="00h00m00s"
+                    aria-describedby="duration-tip"
+                    value={config.d ?? ''}
+                    onChange={(e) => updateConfig({ d: e.target.value })}
+                  />
+                  <div
+                    id="duration-tip"
+                    role="tooltip"
+                    className="pointer-events-none absolute left-1/2 -translate-x-1/2 mt-1 w-max max-w-[16rem] rounded-md border ui-border bg-[color:var(--ui-panel-bg)] px-2 py-1 text-xs ui-label opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+                  >
+                    Examples: 1h30m, 90m, 01:30:00
+                  </div>
+                </div>
                 <div className="flex gap-2">
                   {quickDurations.map((m) => (
                     <button
