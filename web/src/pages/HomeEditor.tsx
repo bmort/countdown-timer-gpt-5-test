@@ -163,8 +163,7 @@ export function HomeEditor() {
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 placeholder="Break"
                 value={title}
-                onChange={setTitle}
-                onBlur={() => updateConfig({ title })}
+                onChange={(v) => { setTitle(v); updateConfig({ title: v }) }}
               />
             </div>
             <div>
