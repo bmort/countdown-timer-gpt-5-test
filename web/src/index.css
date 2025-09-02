@@ -26,6 +26,8 @@ body.theme-dark {
   --ui-input-bg: rgba(0,0,0,0.4);
   --ui-input-text: rgba(243,244,246,1); /* gray-100 */
   --ui-placeholder: rgba(255,255,255,0.5);
+  --ui-popup-bg: #0b0b0b; /* solid background for popovers/menus */
+  --ui-hover: rgba(255,255,255,0.10); /* hover bg for list items */
   /* Subtle page and panel gradients */
   --ui-page-gradient: radial-gradient(1000px 600px at 20% -10%, rgba(34,211,238,0.10), transparent 60%),
     linear-gradient(180deg, #0b1220 0%, #0a0d16 40%, #0a0a0a 100%);
@@ -42,6 +44,8 @@ body.theme-light {
   --ui-input-bg: #ffffff;
   --ui-input-text: #111827; /* gray-900 */
   --ui-placeholder: rgba(0,0,0,0.45);
+  --ui-popup-bg: #ffffff; /* solid background for popovers/menus */
+  --ui-hover: rgba(0,0,0,0.05); /* hover bg for list items */
   /* Subtle page and panel gradients */
   --ui-page-gradient: radial-gradient(800px 500px at 10% -10%, rgba(14,165,233,0.10), transparent 60%),
     linear-gradient(180deg, #f7fafc 0%, #ffffff 70%);

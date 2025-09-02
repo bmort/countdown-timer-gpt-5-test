@@ -101,13 +101,13 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
         onKeyUp={updateQueryFromCaret}
       />
       {open && suggestions.length > 0 && (
-        <div className="absolute z-10 mt-1 w-56 rounded-md border ui-border bg-[color:var(--ui-panel-bg)] shadow-lg">
+        <div className="absolute z-10 mt-1 w-56 rounded-md border ui-border bg-[color:var(--ui-popup-bg)] shadow-lg">
           <ul className="max-h-60 overflow-auto py-1 text-sm">
             {suggestions.map((s, i) => (
               <li key={s.name}>
                 <button
                   type="button"
-                  className={`w-full px-2 py-1 flex items-center gap-2 text-left ${i === activeIndex ? 'bg-white/10' : ''}`}
+                  className={`w-full px-2 py-1 flex items-center gap-2 text-left ${i === activeIndex ? 'bg-[color:var(--ui-hover)]' : 'hover:bg-[color:var(--ui-hover)]'}`}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => applyEmoji(s.char)}
                 >
