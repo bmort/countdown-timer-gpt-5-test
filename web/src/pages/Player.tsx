@@ -126,7 +126,10 @@ function TimerView() {
     return ms
   }, [now, isRunning, targetDeltaMs])
 
-  const d = Duration.fromMillis(remainingMs).shiftTo('hours', 'minutes', 'seconds')
+  const dayMs = 24 * 60 * 60 * 1000
+  const days = Math.floor(remainingMs / dayMs)
+  const displayMs = days > 0 ? Math.max(remainingMs - days * dayMs, 0) : remainingMs
+  const d = Duration.fromMillis(displayMs).shiftTo('hours', 'minutes', 'seconds')
   const hh = Math.floor(d.hours).toString().padStart(2, '0')
   const mm = Math.floor(d.minutes).toString().padStart(2, '0')
   const ss = Math.floor(d.seconds).toString().padStart(2, '0')
@@ -197,6 +200,14 @@ function TimerView() {
           {config.title}
         </div>
       )}
+      {days > 0 && (
+        <div
+          className={`${titleFontClass(config.titleFont ?? config.font)} text-2xl mb-2`}
+          style={{ color: config.titleColor ?? (config.bg && config.bg.toLowerCase() === '#ffffff' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
+        >
+          ({days} {days === 1 ? 'day' : 'days'})
+        </div>
+      )}
       <div className="relative">
         <div
           className="absolute inset-0 -z-10 blur-3xl opacity-80"
@@ -212,7 +223,7 @@ function TimerView() {
             className={`whitespace-nowrap font-bold leading-none ${fontClass(config.font)} ${fxClass(config.fx, secondsTotal)}`}
             style={{ fontSize: `${baseVw}vw`, ...(config.fx === 'neon' ? { textShadow: `0 0 8px ${config.accent}80, 0 0 28px ${config.accent}40` } : null) }}
           >
-            {hh !== '00' ? `${hh}:${mm}:${ss}` : `${mm}:${ss}`}
+            {(hh !== '00' || days > 0) ? `${hh}:${mm}:${ss}` : `${mm}:${ss}`}
           </span>
         </div>
       </div>
