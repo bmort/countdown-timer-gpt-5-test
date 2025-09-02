@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { ThemeToggle } from '../components/ThemeToggle'
 import { DateTime, Duration } from 'luxon'
 import { useTimerConfig, parseDurationToMs, serializeConfigToQuery } from '../state/config'
 import { useGoogleFont } from '../hooks/useGoogleFont'
@@ -31,6 +32,9 @@ export function Player() {
 
   return (
     <div className="w-screen h-screen bg-black text-white">
+      <div className="fixed top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <TimerView />
     </div>
   )

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTimerConfig, serializeConfigToQuery, parseDurationToMs } from '../state/config'
+import { ThemeToggle } from '../components/ThemeToggle'
 import { DateTime } from 'luxon'
 import { buildAccentGlow } from '../utils/color'
 import { useGoogleFont } from '../hooks/useGoogleFont'
@@ -403,23 +404,7 @@ function CopyUrlButton() {
   )
 }
 
-function ThemeToggle() {
-  const { config, updateConfig } = useTimerConfig()
-  const isLight = config.theme === 'light'
-  const toggle = () => {
-    updateConfig({ theme: isLight ? 'dark' : 'light', fg: isLight ? '#FFFFFF' : '#000000', bg: isLight ? '#000000' : '#FFFFFF' })
-  }
-  return (
-    <button
-      onClick={toggle}
-      className="w-9 h-9 grid place-items-center rounded-md border ui-border bg-[color:var(--ui-panel-bg)] hover:bg-white/10"
-      title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
-      aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
-    >
-      {isLight ? '🌙' : '☀️'}
-    </button>
-  )
-}
+// ThemeToggle moved to components/ThemeToggle
 
 function UntilQuickSetButton({ variant = 'default' as const }: { variant?: 'default' | 'inline' }) {
   const { config, updateConfig } = useTimerConfig()
