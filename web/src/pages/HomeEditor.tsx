@@ -64,7 +64,7 @@ export function HomeEditor() {
           <p className="text-[11px] leading-snug ui-label mt-0.5">Vibed out by @Ben Mort, and gpt-5</p>
         </div>
         <div className="flex items-center gap-3">
-          <a className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" href="/timer">Player</a>
+          <Link className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" to="/timer">Player</Link>
           <ThemeToggle />
         </div>
       </header>
