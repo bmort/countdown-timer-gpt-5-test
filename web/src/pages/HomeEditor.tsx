@@ -53,7 +53,8 @@ export function HomeEditor() {
   const onStart = () => {
     const qs = serializeConfigToQuery(config)
     const url = qs ? `${qs}&autostart=1` : 'autostart=1'
-    navigate(`/timer?${url}`)
+    // Use a basename-safe relative path for GitHub Pages
+    navigate({ pathname: 'timer', search: `?${url}` })
   }
 
   return (
@@ -64,7 +65,7 @@ export function HomeEditor() {
           <p className="text-[11px] leading-snug ui-label mt-0.5">Vibed out by @Ben Mort, and gpt-5</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" to="/timer">Player</Link>
+          <Link className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" to="timer">Player</Link>
           <ThemeToggle />
         </div>
       </header>
@@ -275,7 +276,7 @@ export function HomeEditor() {
             </button>
             <Link
               className="px-4 py-2 rounded-lg border ui-border hover:bg-white/5"
-              to={`/timer?${serializeConfigToQuery(config)}&ui=0`}
+              to={`timer?${serializeConfigToQuery(config)}&ui=0`}
               target="_blank"
             >
               Preview Player
