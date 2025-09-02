@@ -1,0 +1,602 @@
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useTimerConfig, serializeConfigToQuery, parseDurationToMs } from '../state/config'
+import { DateTime } from 'luxon'
+import { buildAccentGlow } from '../utils/color'
+import { useGoogleFont } from '../hooks/useGoogleFont'
+import type { TimerMode } from '../state/config'
+
+const modeOptions: Array<{ value: TimerMode; label: string }> = [
+  { value: 'duration', label: 'Duration' },
+  { value: 'until', label: 'Until (Date/Time)' },
+]
+
+export function HomeEditor() {
+  const navigate = useNavigate()
+  const [search] = useSearchParams()
+  const { config, updateConfig, resetConfig } = useTimerConfig()
+  useGoogleFont(config.font)
+  useGoogleFont(config.titleFont)
+
+  useEffect(() => {
+    // hydrate from URL if present
+    if (search.toString()) {
+      const next = Object.fromEntries(search.entries())
+      updateConfig({ fromQuery: next })
+    }
+  }, [search, updateConfig])
+
+  const [title, setTitle] = useState(config.title ?? '')
+  useEffect(() => setTitle(config.title ?? ''), [config.title])
+
+  // Apply theme class to body so the entire page, including config, switches theme
+  useEffect(() => {
+    const light = config.theme === 'light'
+    document.body.classList.toggle('theme-light', light)
+    document.body.classList.toggle('theme-dark', !light)
+  }, [config.theme])
+
+  // When entering until mode, initialize date/time/tz to 10 minutes ahead if not provided
+  useEffect(() => {
+    if (config.mode !== 'until') return
+    if (config.date && config.time && config.tz) return
+    const nowPlus = new Date(Date.now() + 10 * 60 * 1000)
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const date = `${nowPlus.getFullYear()}-${pad(nowPlus.getMonth() + 1)}-${pad(nowPlus.getDate())}`
+    const time = `${pad(nowPlus.getHours())}:${pad(nowPlus.getMinutes())}:${pad(nowPlus.getSeconds())}`
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
+    updateConfig({ date: config.date ?? date, time: config.time ?? time, tz: config.tz ?? tz })
+  }, [config.mode, config.date, config.time, config.tz, updateConfig])
+
+  const quickDurations = [5, 10, 15, 25, 30, 45, 60]
+
+  const onStart = () => {
+    const qs = serializeConfigToQuery(config)
+    const url = qs ? `${qs}&autostart=1` : 'autostart=1'
+    navigate(`/timer?${url}`)
+  }
+
+  return (
+    <div className="min-h-screen grid grid-rows-[auto_1fr]">
+      <header className="px-6 py-4 border-b ui-border flex items-center justify-between ui-panel sticky top-0 backdrop-blur">
+        <h1 className="text-xl font-semibold font-inter">Countdown Timer</h1>
+        <div className="flex items-center gap-3">
+          <a className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" href="/timer">Player</a>
+          <ThemeToggle />
+        </div>
+      </header>
+      <main className="p-6 grid md:grid-cols-2 gap-6">
+        <section className="ui-panel rounded-xl p-5 space-y-4 border ui-border">
+          <div className="flex gap-2">
+            {modeOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => updateConfig({ mode: opt.value })}
+                className={
+                  'px-3 py-1.5 rounded-lg border ' +
+                  (config.mode === opt.value
+                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800 dark:text-cyan-200'
+                    : 'ui-border hover:bg-white/5')
+                }
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          {config.mode === 'duration' ? (
+            <div className="space-y-3">
+              <label className="block text-sm ui-label">Duration</label>
+              <div className="flex items-center gap-2">
+                <input
+                  className="px-3 py-2 rounded-lg ui-input border ui-border w-40"
+                  placeholder="15m"
+                  value={config.d ?? ''}
+                  onChange={(e) => updateConfig({ d: e.target.value })}
+                />
+                <div className="flex gap-2">
+                  {quickDurations.map((m) => (
+                    <button
+                      key={m}
+                      className="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20"
+                      onClick={() => updateConfig({ d: `${m}m` })}
+                    >
+                      {m}m
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-sm ui-label">Date</label>
+                  <input
+                    type="date"
+                    className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                    value={config.date ?? ''}
+                    onChange={(e) => updateConfig({ date: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm ui-label">Time</label>
+                  <div className="relative">
+                    <input
+                      type="time"
+                      step={1}
+                      className="px-3 py-2 pr-20 rounded-lg ui-input border ui-border w-full"
+                      value={config.time ?? ''}
+                      onChange={(e) => updateConfig({ time: e.target.value })}
+                    />
+                    <UntilQuickSetButton variant="inline" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm ui-label">Timezone</label>
+                  <select
+                    className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone}
+                onChange={(e) => updateConfig({ tz: e.target.value })}
+              >
+                {timezones.map((tz) => (
+                  <option key={tz.value} value={tz.value}>{tz.label}</option>
+                ))}
+              </select>
+            </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm ui-label">Title</label>
+              <input
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                placeholder="Break"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={() => updateConfig({ title })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm ui-label">Show progress bar</label>
+              <input
+                type="checkbox"
+                className="scale-125 mt-2"
+                checked={config.bar === '1'}
+                onChange={(e) => updateConfig({ bar: e.target.checked ? '1' : '0' })}
+              />
+            </div>
+          </div>
+
+        <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm ui-label">Title Font</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.titleFont ?? config.font}
+                onChange={(e) => updateConfig({ titleFont: e.target.value })}
+              >
+                {fontOptions.map((f) => (
+                  <option key={f.value} value={f.value}>{f.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm ui-label">Title Size</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.titleSize ?? 'm'}
+                onChange={(e) => updateConfig({ titleSize: e.target.value as any })}
+              >
+                <option value="s">Small</option>
+                <option value="m">Medium</option>
+                <option value="l">Large</option>
+                <option value="xl">XL</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm ui-label">Title Color</label>
+              <input
+                type="color"
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full h-10"
+                value={config.titleColor ?? '#9CA3AF'}
+                onChange={(e) => updateConfig({ titleColor: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm ui-label">Font</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.font}
+                onChange={(e) => updateConfig({ font: e.target.value })}
+              >
+                {fontOptions.map((f) => (
+                  <option key={f.value} value={f.value}>{f.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm ui-label">Size</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.fs}
+                onChange={(e) => updateConfig({ fs: e.target.value as any })}
+              >
+                <option value="s">Small</option>
+                <option value="m">Medium (default)</option>
+                <option value="l">Large</option>
+                <option value="xl">Extra Large</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm ui-label">Accent</label>
+              <input
+                type="color"
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full h-10"
+                value={config.accent}
+                onChange={(e) => updateConfig({ accent: e.target.value })}
+              />
+            </div>
+            <div className="md:col-span-3">
+              <label className="block text-sm ui-label">Font Effects (experimental)</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.fx}
+                onChange={(e) => updateConfig({ fx: e.target.value as any })}
+              >
+                <option value="none">None</option>
+                <option value="pulse-sec">Pulse on seconds</option>
+                <option value="pulse-min">Pulse on minutes</option>
+                <option value="flip-sec">Flip on seconds</option>
+                <option value="neon">Neon glow</option>
+                <option value="shake-10s">Shake in last 10s</option>
+                <option value="pop-sec">Pop on seconds</option>
+              </select>
+              <p className="text-xs text-white/50 mt-1">Visual effects applied to the main digits. Some effects are continuous; minute/second-triggered effects are basic in v1.</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              onClick={onStart}
+              className="px-4 py-2 rounded-lg bg-cyan-500 text-black font-semibold hover:bg-cyan-400"
+            >
+              Start
+            </button>
+            <Link
+              className="px-4 py-2 rounded-lg border ui-border hover:bg-white/5"
+              to={`/timer?${serializeConfigToQuery(config)}&ui=0`}
+              target="_blank"
+            >
+              Preview Player
+            </Link>
+            <CopyUrlButton />
+            <button
+              className="px-4 py-2 rounded-lg border ui-border hover:bg-white/5"
+              onClick={() => {
+                const ok = window.confirm('Reset all settings to defaults?')
+                if (ok) resetConfig()
+              }}
+            >
+              Reset
+            </button>
+          </div>
+        </section>
+
+        <section className="ui-panel rounded-xl p-5 border ui-border">
+          <h2 className="text-sm ui-label mb-3">Live Preview</h2>
+          <div className="aspect-video rounded-lg border ui-border flex items-center justify-center ui-panel">
+            <PreviewTimer />
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}
+
+function PreviewTimer() {
+  const { config } = useTimerConfig()
+  const display = (() => {
+    if (config.mode === 'until') {
+      const tz = config.tz || Intl.DateTimeFormat().resolvedOptions().timeZone
+      const iso = `${config.date ?? ''}T${config.time ?? '00:00:00'}`
+      const target = DateTime.fromISO(iso, { zone: tz })
+      const wall = DateTime.now().setZone(tz)
+      const ms = Math.max(target.toMillis() - wall.toMillis(), 0)
+      return formatTime(ms)
+    }
+    const ms = parseDurationToMs(config.d)
+    return formatTime(ms)
+  })()
+  return (
+    <div className="text-center w-full">
+      {config.title && (
+        <div className={
+          `${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} mb-2`
+        } style={{ color: config.titleColor ?? (config.theme === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}>
+          {config.title}
+        </div>
+      )}
+      <div className="relative inline-block">
+        <div
+          className="absolute inset-0 -z-10 blur-3xl opacity-70"
+          style={{ backgroundImage: buildAccentGlow(config.accent), filter: 'blur(40px)' }}
+        />
+        <div
+          className={
+            'font-bold tracking-tight whitespace-nowrap ' + fontClass(config.font)
+          }
+          style={{ color: config.fg, fontSize: sizeToPx(config.fs) }}
+        >
+          {display}
+        </div>
+      </div>
+      {config.bar === '1' && (
+        <div className="h-2 rounded mt-4" style={{ backgroundColor: config.theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }}>
+          <div className="h-full rounded" style={{ width: '50%', backgroundColor: config.accent }} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function formatTime(ms: number): string {
+  const total = Math.floor(ms / 1000)
+  const hours = Math.floor(total / 3600)
+  const minutes = Math.floor((total % 3600) / 60)
+  const seconds = total % 60
+  const pad = (n: number) => String(n).padStart(2, '0')
+  if (hours > 0) return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+  return `${pad(minutes)}:${pad(seconds)}`
+}
+
+function sizeToPx(fs: 's' | 'm' | 'l' | 'xl' | undefined) {
+  // Preview panel is smaller; use illustrative sizes proportional to Player
+  switch (fs) {
+    case 's':
+      return '6rem'
+    case 'xl':
+      return '14rem' // largest
+    case 'l':
+      return '11rem' // larger than previous XL
+    default:
+      return '8rem' // medium equals old XL
+  }
+}
+
+function CopyUrlButton() {
+  const { config } = useTimerConfig()
+  const [copied, setCopied] = useState(false)
+  const onCopy = async () => {
+    const qs = `${serializeConfigToQuery(config)}&ui=0&autostart=1`
+    const url = `${window.location.origin}/timer?${qs}`
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1400)
+    } catch (e) {
+      // Fallback: select/alert if clipboard not available
+      window.prompt('Copy URL', url)
+    }
+  }
+  return (
+    <button
+      onClick={onCopy}
+      className={`px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 ${copied ? 'text-cyan-300 border-cyan-400' : ''}`}
+      title="Copy a shareable Player URL"
+    >
+      {copied ? 'Copied!' : 'Copy URL'}
+    </button>
+  )
+}
+
+function ThemeToggle() {
+  const { config, updateConfig } = useTimerConfig()
+  const isLight = config.theme === 'light'
+  const toggle = () => {
+    updateConfig({ theme: isLight ? 'dark' : 'light', fg: isLight ? '#FFFFFF' : '#000000', bg: isLight ? '#000000' : '#FFFFFF' })
+  }
+  return (
+    <button
+      onClick={toggle}
+      className="w-9 h-9 grid place-items-center rounded-md border ui-border bg-[color:var(--ui-panel-bg)] hover:bg-white/10"
+      title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+      aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+    >
+      {isLight ? '🌙' : '☀️'}
+    </button>
+  )
+}
+
+function UntilQuickSetButton({ variant = 'default' as const }: { variant?: 'default' | 'inline' }) {
+  const { config, updateConfig } = useTimerConfig()
+  const [open, setOpen] = useState(false)
+  const tz = config.tz || Intl.DateTimeFormat().resolvedOptions().timeZone
+  const apply = (dt: DateTime) => {
+    const d = dt.setZone(tz)
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const date = `${d.year}-${pad(d.month)}-${pad(d.day)}`
+    const time = `${pad(d.hour)}:${pad(d.minute)}:${pad(d.second)}`
+    updateConfig({ date, time, tz })
+    setOpen(false)
+  }
+  if (variant === 'inline') {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 grid place-items-center rounded-md bg-white/10 hover:bg-white/20 border border-white/10 text-base"
+          title="Quickly set the target time"
+          aria-label="Quickly set the target time"
+        >
+          ⏱
+        </button>
+        {open && (
+          <UntilQuickSetDialog tz={tz} onClose={() => setOpen(false)} onApply={apply} />
+        )}
+      </>
+    )
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-sm"
+        title="Quickly set the target time"
+      >
+        Set target…
+      </button>
+      {open && (
+        <UntilQuickSetDialog tz={tz} onClose={() => setOpen(false)} onApply={apply} />
+      )}
+    </>
+  )
+}
+
+function UntilQuickSetDialog({ tz, onClose, onApply }: { tz: string; onClose: () => void; onApply: (dt: DateTime) => void }) {
+  const [customMin, setCustomMin] = useState<number>(10)
+  const now = DateTime.now().setZone(tz)
+  const mk = (minutes: number) => now.plus({ minutes })
+  const nextQuarter = () => {
+    const minutes = now.minute + now.second / 60
+    const next = Math.ceil(minutes / 15) * 15
+    return now.set({ minute: 0, second: 0, millisecond: 0 }).plus({ minutes: next })
+  }
+  const nextHalf = () => {
+    const minutes = now.minute + now.second / 60
+    const next = Math.ceil(minutes / 30) * 30
+    return now.set({ minute: 0, second: 0, millisecond: 0 }).plus({ minutes: next })
+  }
+  const topOfHour = () => now.plus({ hours: 1 }).set({ minute: 0, second: 0, millisecond: 0 })
+  const tomorrowAt = (hour: number) => now.plus({ days: 1 }).set({ hour, minute: 0, second: 0, millisecond: 0 })
+
+  const btn = 'px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-sm'
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="relative bg-black/95 border border-white/10 rounded-xl p-5 w-full max-w-xl shadow-xl">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-white/90 font-semibold">Set Target Time</h3>
+          <button className="text-white/60 hover:text-white" onClick={onClose}>✕</button>
+        </div>
+        <p className="text-sm ui-muted mb-3">Time zone: <span className="ui-label">{tz}</span></p>
+        <div className="grid grid-cols-3 gap-2">
+          <button className={btn} onClick={() => onApply(now)}>Now</button>
+          <button className={btn} onClick={() => onApply(mk(5))}>+5m</button>
+          <button className={btn} onClick={() => onApply(mk(10))}>+10m</button>
+          <button className={btn} onClick={() => onApply(mk(15))}>+15m</button>
+          <button className={btn} onClick={() => onApply(mk(30))}>+30m</button>
+          <button className={btn} onClick={() => onApply(mk(45))}>+45m</button>
+          <button className={btn} onClick={() => onApply(mk(60))}>+1h</button>
+          <button className={btn} onClick={() => onApply(mk(120))}>+2h</button>
+          <button className={btn} onClick={() => onApply(mk(180))}>+3h</button>
+        </div>
+        <div className="grid grid-cols-3 gap-2 mt-3">
+          <button className={btn} onClick={() => onApply(nextQuarter())}>Next :15</button>
+          <button className={btn} onClick={() => onApply(nextHalf())}>Next :30</button>
+          <button className={btn} onClick={() => onApply(topOfHour())}>Top of hour</button>
+        </div>
+        <div className="grid grid-cols-3 gap-2 mt-3">
+          <button className={btn} onClick={() => onApply(tomorrowAt(9))}>Tomorrow 09:00</button>
+          <button className={btn} onClick={() => onApply(tomorrowAt(13))}>Tomorrow 13:00</button>
+          <button className={btn} onClick={() => onApply(tomorrowAt(18))}>Tomorrow 18:00</button>
+        </div>
+        <div className="mt-4 flex items-center gap-2">
+          <label className="text-sm ui-label">Custom minutes ahead</label>
+          <input
+            type="number"
+            min={1}
+            max={24*60}
+            className="px-3 py-2 rounded-lg ui-input border ui-border w-24"
+            value={customMin}
+            onChange={(e) => setCustomMin(Number(e.target.value) || 0)}
+          />
+          <button className={btn} onClick={() => onApply(mk(customMin))}>Apply</button>
+        </div>
+        <div className="mt-4 text-right">
+          <button className="px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function titleFontClass(font?: string) {
+  return fontClass(font)
+}
+
+function titleSizeClass(s?: 's' | 'm' | 'l' | 'xl') {
+  switch (s) {
+    case 'xl':
+      return 'text-3xl'
+    case 'l':
+      return 'text-2xl'
+    case 's':
+      return 'text-base'
+    default:
+      return 'text-xl'
+  }
+}
+
+// Basic enumerated IANA timezones (common set); can be expanded
+const timezones: Array<{ label: string; value: string }> = [
+  { label: 'UTC', value: 'UTC' },
+  { label: 'Europe/London', value: 'Europe/London' },
+  { label: 'Europe/Berlin', value: 'Europe/Berlin' },
+  { label: 'Europe/Paris', value: 'Europe/Paris' },
+  { label: 'Europe/Madrid', value: 'Europe/Madrid' },
+  { label: 'Europe/Rome', value: 'Europe/Rome' },
+  { label: 'Europe/Amsterdam', value: 'Europe/Amsterdam' },
+  { label: 'Europe/Stockholm', value: 'Europe/Stockholm' },
+  { label: 'Europe/Helsinki', value: 'Europe/Helsinki' },
+  { label: 'Africa/Johannesburg (Cape Town)', value: 'Africa/Johannesburg' },
+  { label: 'America/New_York', value: 'America/New_York' },
+  { label: 'America/Chicago', value: 'America/Chicago' },
+  { label: 'America/Denver', value: 'America/Denver' },
+  { label: 'America/Los_Angeles', value: 'America/Los_Angeles' },
+  { label: 'America/Toronto', value: 'America/Toronto' },
+  { label: 'America/Sao_Paulo', value: 'America/Sao_Paulo' },
+  { label: 'Asia/Dubai', value: 'Asia/Dubai' },
+  { label: 'Asia/Kolkata (Pune)', value: 'Asia/Kolkata' },
+  { label: 'Asia/Singapore', value: 'Asia/Singapore' },
+  { label: 'Asia/Shanghai', value: 'Asia/Shanghai' },
+  { label: 'Asia/Tokyo', value: 'Asia/Tokyo' },
+  { label: 'Australia/Sydney', value: 'Australia/Sydney' },
+  { label: 'Australia/Perth', value: 'Australia/Perth' },
+]
+
+// Google Fonts options; value used directly in CSS font-family
+const fontOptions = [
+  { label: 'System', value: 'system' },
+  { label: 'Inter', value: 'Inter' },
+  { label: 'Poppins', value: 'Poppins' },
+  { label: 'Bebas Neue', value: 'Bebas Neue' },
+  { label: 'Roboto Mono', value: 'Roboto Mono' },
+  { label: 'Montserrat', value: 'Montserrat' },
+  { label: 'Oswald', value: 'Oswald' },
+  { label: 'Lato', value: 'Lato' },
+  { label: 'Noto Sans', value: 'Noto Sans' },
+]
+
+function fontClass(font: string | undefined) {
+  switch (font) {
+    case 'Inter':
+      return 'font-inter'
+    case 'Poppins':
+      return 'font-poppins'
+    case 'Bebas Neue':
+      return 'font-bebas'
+    case 'Roboto Mono':
+      return 'font-mono'
+    default:
+      return ''
+  }
+}

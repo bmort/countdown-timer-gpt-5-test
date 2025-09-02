@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-poppins: "Poppins", var(--font-inter);
+  --font-bebas: "Bebas Neue", var(--font-inter);
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-gray-950 text-gray-100 antialiased;
+}
+
+/* Light/Dark theme tokens */
+body.theme-dark {
+  --ui-panel-bg: rgba(255,255,255,0.05);
+  --ui-border: rgba(255,255,255,0.10);
+  --ui-label: rgba(255,255,255,0.8);
+  --ui-muted: rgba(255,255,255,0.65);
+  --ui-input-bg: rgba(0,0,0,0.4);
+  --ui-input-text: rgba(243,244,246,1); /* gray-100 */
+  --ui-placeholder: rgba(255,255,255,0.5);
+  /* Subtle page and panel gradients */
+  --ui-page-gradient: radial-gradient(1000px 600px at 20% -10%, rgba(34,211,238,0.10), transparent 60%),
+    linear-gradient(180deg, #0b1220 0%, #0a0d16 40%, #0a0a0a 100%);
+  --ui-panel-gradient: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  background: var(--ui-page-gradient);
+}
+
+body.theme-light {
+  @apply text-gray-900;
+  --ui-panel-bg: rgba(0,0,0,0.04);
+  --ui-border: rgba(0,0,0,0.10);
+  --ui-label: rgba(0,0,0,0.75);
+  --ui-muted: rgba(0,0,0,0.6);
+  --ui-input-bg: #ffffff;
+  --ui-input-text: #111827; /* gray-900 */
+  --ui-placeholder: rgba(0,0,0,0.45);
+  /* Subtle page and panel gradients */
+  --ui-page-gradient: radial-gradient(800px 500px at 10% -10%, rgba(14,165,233,0.10), transparent 60%),
+    linear-gradient(180deg, #f7fafc 0%, #ffffff 70%);
+  --ui-panel-gradient: linear-gradient(135deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.01) 100%);
+  background: var(--ui-page-gradient);
+}
+
+.ui-panel {
+  background: var(--ui-panel-bg);
+  background-image: var(--ui-panel-gradient);
+  border-color: var(--ui-border);
+}
+
+.ui-border {
+  border-color: var(--ui-border);
+}
+
+.ui-label {
+  color: var(--ui-label);
+}
+
+.ui-muted {
+  color: var(--ui-muted);
+}
+
+.ui-input {
+  background: var(--ui-input-bg);
+  color: var(--ui-input-text);
+  border-color: var(--ui-border);
+}
+
+.ui-input::placeholder {
+  color: var(--ui-placeholder);
+}
+
+@keyframes neonPulse {
+  0%, 100% { text-shadow: 0 0 6px rgba(34,211,238,0.6), 0 0 20px rgba(34,211,238,0.25); }
+  50% { text-shadow: 0 0 12px rgba(34,211,238,0.9), 0 0 35px rgba(34,211,238,0.45); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1.5%); }
+  50% { transform: translateX(1.5%); }
+  75% { transform: translateX(-0.7%); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
