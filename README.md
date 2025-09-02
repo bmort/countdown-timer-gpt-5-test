@@ -13,7 +13,8 @@ Monorepo-style layout with the Vite + React + TypeScript app in `web/`. This roo
 ## Demo
 Short GIF preview of the timer UI. Place a file at `web/public/demo.gif` to render below (served at `/demo.gif` in dev):
 
-![Countdown Timer demo](web/public/demo.gif)
+![Countdown Timer demo (placeholder — replace with real GIF)](web/public/demo.gif)
+<sub>Placeholder 1×1 GIF to avoid broken image. Replace `web/public/demo.gif` with a real capture when available.</sub>
 
 ## Deploy
 - CI: GitLab pipeline builds the app and pushes `web/dist/` to the `gh-pages` branch on GitHub.
