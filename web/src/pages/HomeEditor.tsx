@@ -379,7 +379,9 @@ function CopyUrlButton() {
   const [copied, setCopied] = useState(false)
   const onCopy = async () => {
     const qs = `${serializeConfigToQuery(config)}&ui=0&autostart=1`
-    const url = `${window.location.origin}/timer?${qs}`
+    // Respect Vite/React Router basename for GitHub Pages URLs
+    const base = new URL(import.meta.env.BASE_URL, window.location.origin)
+    const url = `${base.toString().replace(/\/$/, '')}/timer?${qs}`
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
