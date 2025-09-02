@@ -268,7 +268,7 @@ function Controls({ isRunning, onToggle, onReset, backHref, isLight }: { isRunni
     ? 'text-black/60 hover:text-black bg-black/0 hover:bg-black/10'
     : 'text-white/40 hover:text-white bg-white/0 hover:bg-white/15'
   return (
-    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5`}>
+    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5 opacity-20 hover:opacity-100 focus-within:opacity-100 transition-opacity`}>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onReset}>Reset</button>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={toggleFullscreen}>Full-screen</button>
