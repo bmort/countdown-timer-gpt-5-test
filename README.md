@@ -17,9 +17,8 @@ Short GIF preview of the timer UI. Place a file at `web/public/demo.gif` to rend
 <sub>Placeholder 1×1 GIF to avoid broken image. Replace `web/public/demo.gif` with a real capture when available.</sub>
 
 ## Deploy
-- CI: GitLab pipeline builds the app and pushes `web/dist/` to the `gh-pages` branch on GitHub.
-- Docs: See `scripts/gitlab-ci.md` for setup (tokens, variables, Pages settings).
-- Variables: Set `GH_TOKEN`, optionally `BASE_PATH` (use `/` for user/org pages).
+- GitHub Pages: Site is published from the `gh-pages` branch.
+- Build base path: For project pages, build with `--base='/countdown-timer-gpt-5-test/'`.
 
 ## Quick Start
 - Change into the app folder: `cd web`
