@@ -93,7 +93,7 @@ export function HomeEditor() {
 
           {config.mode === 'duration' ? (
             <div className="space-y-3">
-              <label className="block text-sm ui-label">Duration</label>
+              <label className="block text-sm ui-label">Duration (h,m,s)</label>
               <div className="flex items-center gap-2">
                 <input
                   className="px-3 py-2 rounded-lg ui-input border ui-border w-40"
