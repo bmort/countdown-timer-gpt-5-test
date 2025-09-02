@@ -1,6 +1,18 @@
 # Countdown Timer
 
+![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=061A2A)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38B2AC?logo=tailwindcss&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-2.0-6E9F18?logo=vitest&logoColor=white)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+
 Monorepo-style layout with the Vite + React + TypeScript app in `web/`. This root README orients contributors and points to app docs.
+
+## Demo
+Short GIF preview of the timer UI. Place a file at `web/public/demo.gif` to render below (served at `/demo.gif` in dev):
+
+![Countdown Timer demo](web/public/demo.gif)
 
 ## Quick Start
 - Change into the app folder: `cd web`
