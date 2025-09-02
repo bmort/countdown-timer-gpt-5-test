@@ -32,7 +32,7 @@ export function Player() {
 
   return (
     <div className="w-screen h-screen bg-black text-white">
-      <div className="fixed top-4 right-4 z-10">
+      <div className="fixed top-4 right-4 z-10 opacity-20 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
         <ThemeToggle />
       </div>
       <TimerView />
