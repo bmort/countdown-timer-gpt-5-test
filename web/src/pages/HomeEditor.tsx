@@ -62,7 +62,7 @@ export function HomeEditor() {
       <header className="px-6 py-4 border-b ui-border flex items-center justify-between ui-panel sticky top-0 backdrop-blur">
         <div>
           <h1 className="text-xl font-semibold font-inter">Countdown Timer</h1>
-          <p className="text-[11px] leading-snug ui-label mt-0.5">Vibed out by @Ben Mort, and gpt-5 (version: {__APP_VERSION__})</p>
+          <p className="text-[11px] leading-snug ui-label mt-0.5">Vibed out by @Ben Mort, and gpt-5</p>
         </div>
         <div className="flex items-center gap-3">
           <Link className="text-sm text-cyan-600 dark:text-cyan-300 hover:underline" to="timer">Player</Link>
