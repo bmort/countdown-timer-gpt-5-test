@@ -309,18 +309,21 @@ export function HomeEditor() {
 
 function PreviewTimer() {
   const { config } = useTimerConfig()
-  const display = (() => {
+  // Compute total ms remaining for preview
+  const totalMs = (() => {
     if (config.mode === 'until') {
       const tz = config.tz || Intl.DateTimeFormat().resolvedOptions().timeZone
       const iso = `${config.date ?? ''}T${config.time ?? '00:00:00'}`
       const target = DateTime.fromISO(iso, { zone: tz })
       const wall = DateTime.now().setZone(tz)
-      const ms = Math.max(target.toMillis() - wall.toMillis(), 0)
-      return formatTime(ms)
+      return Math.max(target.toMillis() - wall.toMillis(), 0)
     }
-    const ms = parseDurationToMs(config.d)
-    return formatTime(ms)
+    return parseDurationToMs(config.d)
   })()
+  const dayMs = 24 * 60 * 60 * 1000
+  const days = Math.floor(totalMs / dayMs)
+  const remMs = days > 0 ? Math.max(totalMs - days * dayMs, 0) : totalMs
+  const display = formatTime(remMs, days > 0)
   return (
     <div className="text-center w-full">
       {config.title && (
@@ -328,6 +331,14 @@ function PreviewTimer() {
           `${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} mb-2`
         } style={{ color: config.titleColor ?? (config.theme === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}>
           {config.title}
+        </div>
+      )}
+      {days > 0 && (
+        <div
+          className={`${titleFontClass(config.titleFont ?? config.font)} text-base mb-1`}
+          style={{ color: config.titleColor ?? (config.theme === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
+        >
+          ({days} {days === 1 ? 'day' : 'days'})
         </div>
       )}
       <div className="relative inline-block">
@@ -353,13 +364,13 @@ function PreviewTimer() {
   )
 }
 
-function formatTime(ms: number): string {
+function formatTime(ms: number, forceHours = false): string {
   const total = Math.floor(ms / 1000)
   const hours = Math.floor(total / 3600)
   const minutes = Math.floor((total % 3600) / 60)
   const seconds = total % 60
   const pad = (n: number) => String(n).padStart(2, '0')
-  if (hours > 0) return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+  if (hours > 0 || forceHours) return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
   return `${pad(minutes)}:${pad(seconds)}`
 }
 
