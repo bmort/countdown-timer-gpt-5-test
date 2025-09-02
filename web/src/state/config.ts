@@ -35,7 +35,6 @@ export type Config = {
 
 export const defaultConfig: Config = {
   mode: 'duration',
-  d: '15m',
   // Default size is the new Medium (previously XL)
   fs: 'm',
   theme: 'dark',

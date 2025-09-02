@@ -97,7 +97,7 @@ export function HomeEditor() {
               <div className="flex items-center gap-2">
                 <input
                   className="px-3 py-2 rounded-lg ui-input border ui-border w-40"
-                  placeholder="15m"
+                  placeholder="00h00m00s"
                   value={config.d ?? ''}
                   onChange={(e) => updateConfig({ d: e.target.value })}
                 />
