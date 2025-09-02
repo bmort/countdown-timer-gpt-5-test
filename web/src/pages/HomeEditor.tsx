@@ -398,7 +398,7 @@ function CopyUrlButton() {
       className={`px-4 py-2 rounded-lg border ui-border hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-cyan-400/50 ${copied ? 'text-cyan-700 dark:text-cyan-300 border-cyan-500 dark:border-cyan-400 bg-cyan-500/10 dark:bg-transparent' : ''}`}
       title="Copy a shareable Player URL"
     >
-      {copied ? 'Copied!' : 'Copy URL'}
+      {copied ? 'Copied!' : 'Copy Share URL'}
     </button>
   )
 }
