@@ -6,6 +6,7 @@
 ![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38B2AC?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-2.0-6E9F18?logo=vitest&logoColor=white)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
+ [![GitHub Pages](https://img.shields.io/website?url=https%3A%2F%2Fbmort.github.io%2Fcountdown-timer-gpt-5-test%2F&label=GitHub%20Pages&up_message=online&down_message=offline)](https://bmort.github.io/countdown-timer-gpt-5-test/)
 
 Monorepo-style layout with the Vite + React + TypeScript app in `web/`. This root README orients contributors and points to app docs.
 
@@ -13,6 +14,11 @@ Monorepo-style layout with the Vite + React + TypeScript app in `web/`. This roo
 Short GIF preview of the timer UI. Place a file at `web/public/demo.gif` to render below (served at `/demo.gif` in dev):
 
 ![Countdown Timer demo](web/public/demo.gif)
+
+## Deploy
+- CI: GitLab pipeline builds the app and pushes `web/dist/` to the `gh-pages` branch on GitHub.
+- Docs: See `scripts/gitlab-ci.md` for setup (tokens, variables, Pages settings).
+- Variables: Set `GH_TOKEN`, optionally `BASE_PATH` (use `/` for user/org pages).
 
 ## Quick Start
 - Change into the app folder: `cd web`
