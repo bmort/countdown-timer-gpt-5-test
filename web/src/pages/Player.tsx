@@ -251,6 +251,7 @@ function TimerView() {
           setIsRunning(false)
         }}
         backHref={backHref}
+        isLight={config.theme === 'light'}
       />
     </div>
   )
@@ -261,13 +262,17 @@ function progressPercent(remaining: number, total: number) {
   return Math.max(0, Math.min(100, 100 - (remaining / total) * 100))
 }
 
-function Controls({ isRunning, onToggle, onReset, backHref }: { isRunning: boolean; onToggle: () => void; onReset: () => void; backHref: string }) {
+function Controls({ isRunning, onToggle, onReset, backHref, isLight }: { isRunning: boolean; onToggle: () => void; onReset: () => void; backHref: string; isLight: boolean }) {
+  const containerBorder = isLight ? 'border-black/10' : 'border-white/10'
+  const btn = isLight
+    ? 'text-black/60 hover:text-black bg-black/0 hover:bg-black/10'
+    : 'text-white/40 hover:text-white bg-white/0 hover:bg-white/15'
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-white/0 border border-white/10 rounded-full px-3 py-1.5">
-      <button className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
-      <button className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" onClick={onReset}>Reset</button>
-      <button className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" onClick={toggleFullscreen}>Full-screen</button>
-      <Link className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" to={backHref}>Back to Config</Link>
+    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5`}>
+      <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
+      <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onReset}>Reset</button>
+      <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={toggleFullscreen}>Full-screen</button>
+      <Link className={`px-3 py-1 rounded-full transition-colors ${btn}`} to={backHref}>Back to Config</Link>
     </div>
   )
 }
