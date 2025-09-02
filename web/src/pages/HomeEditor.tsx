@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTimerConfig, serializeConfigToQuery, parseDurationToMs } from '../state/config'
+import { EmojiTitleInput } from '../components/EmojiTitleInput'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { DateTime } from 'luxon'
 import { buildAccentGlow } from '../utils/color'
@@ -158,11 +159,11 @@ export function HomeEditor() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm ui-label">Title</label>
-              <input
+              <EmojiTitleInput
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 placeholder="Break"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={setTitle}
                 onBlur={() => updateConfig({ title })}
               />
             </div>
