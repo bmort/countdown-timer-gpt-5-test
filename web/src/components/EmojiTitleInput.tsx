@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { EMOJIS } from '../utils/emoji'
 
 type Props = {
   value: string
@@ -8,45 +9,7 @@ type Props = {
   onBlur?: () => void
 }
 
-type EmojiDef = { name: string; char: string; aliases?: string[] }
-
-const EMOJIS: EmojiDef[] = [
-  { name: 'smile', char: '😊', aliases: ['happy', 'blush'] },
-  { name: 'grinning', char: '😀', aliases: ['smiley'] },
-  { name: 'laugh', char: '😂', aliases: ['joy'] },
-  { name: 'wink', char: '😉' },
-  { name: 'heart', char: '❤️', aliases: ['love'] },
-  { name: 'thumbs_up', char: '👍', aliases: ['like', 'approve'] },
-  { name: 'clap', char: '👏' },
-  { name: 'party', char: '🥳', aliases: ['tada'] },
-  { name: 'rocket', char: '🚀', aliases: ['launch'] },
-  { name: 'fire', char: '🔥' },
-  { name: 'sparkles', char: '✨' },
-  { name: 'star', char: '⭐' },
-  { name: 'check', char: '✅' },
-  { name: 'x', char: '❌' },
-  { name: 'warning', char: '⚠️' },
-  { name: 'hourglass', char: '⏳' },
-  { name: 'alarm', char: '⏰', aliases: ['clock'] },
-  { name: 'bell', char: '🔔' },
-  { name: 'coffee', char: '☕' },
-  { name: 'pizza', char: '🍕' },
-  { name: 'microphone', char: '🎤' },
-  { name: 'laptop', char: '💻' },
-  { name: 'musical_note', char: '🎵', aliases: ['music'] },
-  { name: 'soccer', char: '⚽' },
-  { name: 'trophy', char: '🏆' },
-  { name: 'sun', char: '☀️' },
-  { name: 'moon', char: '🌙' },
-  { name: 'cloud', char: '☁️' },
-  { name: 'rain', char: '🌧️' },
-  { name: 'snow', char: '❄️' },
-  { name: 'wave', char: '🌊' },
-  { name: 'book', char: '📖' },
-  { name: 'pencil', char: '✏️' },
-  { name: 'art', char: '🎨' },
-  { name: 'sparkle_heart', char: '💖' },
-]
+// Emoji catalog now imported from utils (includes animals)
 
 export function EmojiTitleInput({ value, onChange, placeholder, className, onBlur }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -159,4 +122,3 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
     </div>
   )
 }
-
