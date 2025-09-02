@@ -98,6 +98,7 @@ export function HomeEditor() {
                 <input
                   className="px-3 py-2 rounded-lg ui-input border ui-border w-40"
                   placeholder="00h00m00s"
+                  title="Examples: 1h30m, 90m, 01:30:00"
                   value={config.d ?? ''}
                   onChange={(e) => updateConfig({ d: e.target.value })}
                 />
