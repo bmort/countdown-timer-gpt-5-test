@@ -288,7 +288,7 @@ export function HomeEditor() {
                 if (ok) resetConfig()
               }}
             >
-              Reset
+              Reset Config
             </button>
           </div>
         </section>
