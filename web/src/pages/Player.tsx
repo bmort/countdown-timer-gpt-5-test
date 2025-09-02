@@ -32,7 +32,7 @@ export function Player() {
 
   return (
     <div className="w-screen h-screen bg-black text-white">
-      <div className={`fixed top-4 right-4 z-10 ${config.theme === 'light' ? 'opacity-20' : 'opacity-10'} hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200`}>
+      <div className={`fixed top-4 right-4 z-10 ${config.theme === 'light' ? 'opacity-20' : 'opacity-30'} hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200`}>
         <ThemeToggle />
       </div>
       <TimerView />
@@ -267,8 +267,9 @@ function Controls({ isRunning, onToggle, onReset, backHref, isLight }: { isRunni
   const btn = isLight
     ? 'text-black/60 hover:text-black bg-black/0 hover:bg-black/10'
     : 'text-white/40 hover:text-white bg-white/0 hover:bg-white/15'
+  const baseOpacity = isLight ? 'opacity-20' : 'opacity-30'
   return (
-    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5 opacity-20 hover:opacity-100 focus-within:opacity-100 transition-opacity`}>
+    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5 ${baseOpacity} hover:opacity-100 focus-within:opacity-100 transition-opacity`}>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onReset}>Reset</button>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={toggleFullscreen}>Full-screen</button>
