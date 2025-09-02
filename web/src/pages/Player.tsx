@@ -248,11 +248,11 @@ function progressPercent(remaining: number, total: number) {
 
 function Controls({ isRunning, onToggle, onReset, backHref }: { isRunning: boolean; onToggle: () => void; onReset: () => void; backHref: string }) {
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
-      <button className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
-      <button className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" onClick={onReset}>Reset</button>
-      <button className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" onClick={toggleFullscreen}>Full-screen</button>
-      <Link className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20" to={backHref}>Back to Config</Link>
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-white/0 border border-white/10 rounded-full px-3 py-1.5">
+      <button className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
+      <button className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" onClick={onReset}>Reset</button>
+      <button className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" onClick={toggleFullscreen}>Full-screen</button>
+      <Link className="px-3 py-1 rounded-full text-white/40 hover:text-white bg-white/0 hover:bg-white/15 transition-colors" to={backHref}>Back to Config</Link>
     </div>
   )
 }
