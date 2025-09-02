@@ -76,9 +76,11 @@ export function HomeEditor() {
                 key={opt.value}
                 onClick={() => updateConfig({ mode: opt.value })}
                 className={
-                  'px-3 py-1.5 rounded-lg border ' +
+                  'px-3 py-1.5 rounded-lg border outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/50 ' +
                   (config.mode === opt.value
-                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800 dark:text-cyan-200'
+                    ? (config.theme === 'light'
+                        ? 'bg-cyan-500/15 border-cyan-600 text-cyan-900'
+                        : 'bg-cyan-400/25 border-cyan-400 text-cyan-100')
                     : 'ui-border hover:bg-white/5')
                 }
               >
