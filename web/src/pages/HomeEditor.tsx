@@ -212,6 +212,20 @@ export function HomeEditor() {
                 onChange={(e) => updateConfig({ titleColor: e.target.value })}
               />
             </div>
+            <div>
+              <label className="block text-sm ui-label">Title Weight</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.titleWeight ?? 'normal'}
+                onChange={(e) => updateConfig({ titleWeight: e.target.value as any })}
+              >
+                <option value="normal">Normal</option>
+                <option value="medium">Medium</option>
+                <option value="semibold">Semibold</option>
+                <option value="bold">Bold</option>
+                <option value="extrabold">Extra Bold</option>
+              </select>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-4">
@@ -248,6 +262,20 @@ export function HomeEditor() {
                 value={config.accent}
                 onChange={(e) => updateConfig({ accent: e.target.value })}
               />
+            </div>
+            <div>
+              <label className="block text-sm ui-label">Timer/Days Weight</label>
+              <select
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                value={config.digitWeight ?? 'bold'}
+                onChange={(e) => updateConfig({ digitWeight: e.target.value as any })}
+              >
+                <option value="normal">Normal</option>
+                <option value="medium">Medium</option>
+                <option value="semibold">Semibold</option>
+                <option value="bold">Bold</option>
+                <option value="extrabold">Extra Bold</option>
+              </select>
             </div>
             <div className="md:col-span-3">
               <label className="block text-sm ui-label">Font Effects (experimental)</label>
@@ -327,14 +355,14 @@ function PreviewTimer() {
     <div className="text-center w-full">
       {config.title && (
         <div className={
-          `${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} ${days > 0 ? 'mb-4' : 'mb-2'}`
+          `${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} ${weightClass(config.titleWeight)} ${days > 0 ? 'mb-4' : 'mb-2'}`
         } style={{ color: config.titleColor ?? (config.theme === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}>
           {config.title}
         </div>
       )}
       {days > 0 && (
         <div
-          className={`${fontClass(config.font)} font-bold`}
+          className={`${fontClass(config.font)} ${weightClass(config.digitWeight)}`}
           style={{ color: config.fg, fontSize: `calc(${sizeToPx(config.fs)} * 0.3)`, lineHeight: 1.0, marginBottom: '0.5em' }}
         >
           {days} {days === 1 ? 'day' : 'days'}
@@ -347,7 +375,7 @@ function PreviewTimer() {
         />
         <div
           className={
-            'font-bold tracking-tight whitespace-nowrap ' + fontClass(config.font)
+            `${weightClass(config.digitWeight)} tracking-tight whitespace-nowrap ` + fontClass(config.font)
           }
           style={{ color: config.fg, fontSize: sizeToPx(config.fs) }}
         >
@@ -602,5 +630,20 @@ function fontClass(font: string | undefined) {
       return 'font-mono'
     default:
       return ''
+  }
+}
+
+function weightClass(w?: 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') {
+  switch (w) {
+    case 'medium':
+      return 'font-medium'
+    case 'semibold':
+      return 'font-semibold'
+    case 'bold':
+      return 'font-bold'
+    case 'extrabold':
+      return 'font-extrabold'
+    default:
+      return 'font-normal'
   }
 }

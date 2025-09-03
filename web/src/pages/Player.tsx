@@ -206,7 +206,7 @@ function TimerView() {
     <div className="w-full h-full flex flex-col items-center justify-center select-none" style={{ color: config.fg, background: config.bg }}>
       {days > 0 && (
         <div
-          className={`${fontClass(config.font)} font-bold`}
+          className={`${fontClass(config.font)} ${weightClass(config.digitWeight)}`}
           style={{ color: config.fg, fontSize: `${baseVw * scale * 0.3}vw`, lineHeight: 1.0, marginBottom: '0.5em' }}
         >
           {days} {days === 1 ? 'day' : 'days'}
@@ -224,7 +224,7 @@ function TimerView() {
         >
           <span
             ref={measureRef}
-            className={`whitespace-nowrap font-bold leading-none ${fontClass(config.font)} ${fxClass(config.fx, secondsTotal)}`}
+            className={`whitespace-nowrap ${weightClass(config.digitWeight)} leading-none ${fontClass(config.font)} ${fxClass(config.fx, secondsTotal)}`}
             style={{ fontSize: `${baseVw}vw`, ...(config.fx === 'neon' ? { textShadow: `0 0 8px ${config.accent}80, 0 0 28px ${config.accent}40` } : null) }}
           >
             {(hh !== '00' || days > 0) ? `${hh}:${mm}:${ss}` : `${mm}:${ss}`}
@@ -316,6 +316,21 @@ function fontClass(font: string | undefined) {
       return 'font-mono'
     default:
       return ''
+  }
+}
+
+function weightClass(w?: 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') {
+  switch (w) {
+    case 'medium':
+      return 'font-medium'
+    case 'semibold':
+      return 'font-semibold'
+    case 'bold':
+      return 'font-bold'
+    case 'extrabold':
+      return 'font-extrabold'
+    default:
+      return 'font-normal'
   }
 }
 

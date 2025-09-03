@@ -16,10 +16,12 @@ export type Config = {
   titleFont?: string | 'system'
   titleSize?: 's' | 'm' | 'l' | 'xl'
   titleColor?: string
+  titleWeight?: 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold'
   ui?: '0' | '1'
   theme?: 'dark' | 'light'
   font?: string | 'system'
   fs?: 's' | 'm' | 'l' | 'xl'
+  digitWeight?: 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold'
   fg?: string
   bg?: string
   accent?: string
@@ -39,6 +41,8 @@ export const defaultConfig: Config = {
   fs: 'm',
   theme: 'dark',
   font: 'Inter',
+  titleWeight: 'normal',
+  digitWeight: 'bold',
   fg: '#FFFFFF',
   bg: '#000000',
   accent: '#22D3EE',
@@ -84,10 +88,12 @@ export function serializeConfigToQuery(config: Config): string {
   add('tfont', config.titleFont)
   add('tfs', config.titleSize)
   add('tfg', config.titleColor)
+  add('tw', config.titleWeight)
   add('ui', config.ui)
   add('theme', config.theme)
   add('font', config.font)
   add('fs', config.fs)
+  add('dw', config.digitWeight)
   add('fg', config.fg)
   add('bg', config.bg)
   add('accent', config.accent)
@@ -118,10 +124,12 @@ export function applyQueryToConfig(prev: Config, q: Record<string, string>): Con
   next.titleFont = q.tfont ?? prev.titleFont
   next.titleSize = pick(q.tfs, ['s', 'm', 'l', 'xl'] as const) ?? prev.titleSize
   next.titleColor = q.tfg ?? prev.titleColor
+  next.titleWeight = pick(q.tw, ['normal', 'medium', 'semibold', 'bold', 'extrabold'] as const) ?? prev.titleWeight
   next.ui = pick(q.ui, ['0', '1'] as const) ?? prev.ui
   next.theme = pick(q.theme, ['dark', 'light'] as const) ?? prev.theme
   next.font = q.font ?? prev.font
   next.fs = pick(q.fs, ['s', 'm', 'l', 'xl'] as const) ?? prev.fs
+  next.digitWeight = pick(q.dw, ['normal', 'medium', 'semibold', 'bold', 'extrabold'] as const) ?? prev.digitWeight
   next.fg = q.fg ?? prev.fg
   next.bg = q.bg ?? prev.bg
   next.accent = q.accent ?? prev.accent
