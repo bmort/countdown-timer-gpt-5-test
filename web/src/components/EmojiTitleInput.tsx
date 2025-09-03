@@ -39,15 +39,24 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
       const quickItems = catalog.filter((e) => quick.includes(e.name) && !recentNames.has(e.name))
       return [...recentItems, ...quickItems].slice(0, 12)
     }
+    const recentByChar = new Map(recents.map((r, idx) => [r.char, idx]))
     const all = catalog.map((e) => {
       const hay = [e.name, ...(e.aliases ?? [])]
       const starts = hay.some((k) => k.startsWith(q))
       const contains = !starts && hay.some((k) => k.includes(q))
-      const score = starts ? 3 : contains ? 1 : 0
-      return { e, score }
+      // Base score from text match, plus a boost if in recents
+      const base = starts ? 3 : contains ? 1 : 0
+      const rIndex = recentByChar.get(e.char)
+      const boost = rIndex != null ? 2 : 0
+      const score = base + boost
+      return { e, score, rIndex: rIndex ?? Number.POSITIVE_INFINITY }
     })
       .filter((s) => s.score > 0)
-      .sort((a, b) => b.score - a.score || a.e.name.localeCompare(b.e.name))
+      .sort((a, b) =>
+        b.score - a.score ||
+        a.rIndex - b.rIndex ||
+        a.e.name.localeCompare(b.e.name)
+      )
       .slice(0, 20)
       .map((s) => s.e)
     return all
