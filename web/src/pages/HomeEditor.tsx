@@ -297,7 +297,7 @@ export function HomeEditor() {
                 <option value="shake-10s">Shake in last 10s</option>
                 <option value="pop-sec">Pop on seconds</option>
               </select>
-              <p className="text-xs text-white/50 mt-1">Visual effects applied to the main digits. Some effects are continuous; minute/second-triggered effects are basic in v1.</p>
+              <p className="text-xs ui-label mt-1">Visual effects applied to the main digits. Some effects are continuous; minute/second-triggered effects are basic in v1.</p>
             </div>
           </div>
 
