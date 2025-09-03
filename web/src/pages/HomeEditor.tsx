@@ -335,7 +335,7 @@ function PreviewTimer() {
       {days > 0 && (
         <div
           className={`${titleFontClass(config.titleFont ?? config.font)} text-base mb-1`}
-          style={{ color: config.titleColor ?? (config.theme === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
+          style={{ color: config.fg }}
         >
           ({days} {days === 1 ? 'day' : 'days'})
         </div>
