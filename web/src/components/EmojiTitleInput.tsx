@@ -20,15 +20,23 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
   const [activeIndex, setActiveIndex] = useState(0)
   const [fullData, setFullData] = useState<typeof EMOJIS | null>(null)
   const [loadingFull, setLoadingFull] = useState(false)
+  const [recents, setRecents] = useState<{ char: string; name: string }[]>([])
 
   const suggestions = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!open) return []
     const catalog = (fullData && fullData.length > 0) ? fullData : EMOJIS
     if (q === '') {
-      // Curated quick picks when no query
+      // Recents first
+      const byChar = new Map(catalog.map((e) => [e.char, e]))
+      const recentItems = recents
+        .map((r) => byChar.get(r.char))
+        .filter((e): e is NonNullable<typeof e> => Boolean(e))
+      // Then curated quick picks, excluding recents
       const quick = ['tada', 'rocket', 'alarm', 'hourglass', 'coffee', 'muscle', 'sparkles', 'star', 'white_check_mark', 'fire', 'calendar', 'party']
-      return catalog.filter((e) => quick.includes(e.name)).slice(0, 12)
+      const recentNames = new Set(recentItems.map((e) => e.name))
+      const quickItems = catalog.filter((e) => quick.includes(e.name) && !recentNames.has(e.name))
+      return [...recentItems, ...quickItems].slice(0, 12)
     }
     const all = catalog.map((e) => {
       const hay = [e.name, ...(e.aliases ?? [])]
@@ -42,7 +50,7 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
       .slice(0, 20)
       .map((s) => s.e)
     return all
-  }, [open, query, fullData])
+  }, [open, query, fullData, recents])
 
   // Track query based on caret position and preceding ':'
   const updateQueryFromCaret = () => {
@@ -80,16 +88,40 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
       .finally(() => setLoadingFull(false))
   }, [open, fullData, loadingFull])
 
-  const applyEmoji = (emoji: string) => {
+  // Recents: load and persist to localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('emoji.recents')
+      if (raw) {
+        const arr = JSON.parse(raw) as { char: string; name: string }[]
+        if (Array.isArray(arr)) setRecents(arr.slice(0, 30))
+      }
+    } catch { /* ignore */ }
+  }, [])
+
+  const recordRecent = (entry: { char: string; name: string }) => {
+    setRecents((prev) => {
+      const without = prev.filter((r) => r.char !== entry.char)
+      const next = [{ char: entry.char, name: entry.name }, ...without].slice(0, 30)
+      try {
+        localStorage.setItem('emoji.recents', JSON.stringify(next))
+      } catch { /* ignore */ }
+      return next
+    })
+  }
+
+  const applyEmoji = (entry: { char: string; name?: string }) => {
     const el = inputRef.current
     if (el == null || anchorStart == null) return
     const caret = el.selectionStart ?? value.length
-    const next = value.slice(0, anchorStart) + emoji + value.slice(caret)
+    const next = value.slice(0, anchorStart) + entry.char + value.slice(caret)
     onChange(next)
     setOpen(false)
+    // Record recent
+    recordRecent({ char: entry.char, name: entry.name ?? entry.char })
     // place caret after inserted emoji on next tick
     requestAnimationFrame(() => {
-      const pos = anchorStart + emoji.length
+      const pos = anchorStart + entry.char.length
       el.setSelectionRange(pos, pos)
       el.focus()
     })
@@ -115,7 +147,8 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
           } else if (e.key === 'Enter' || e.key === 'Tab') {
             if (suggestions[activeIndex]) {
               e.preventDefault()
-              applyEmoji(suggestions[activeIndex].char)
+              const s = suggestions[activeIndex]
+              applyEmoji({ char: s.char, name: s.name })
             }
           } else if (e.key === 'Escape') {
             setOpen(false)
@@ -133,7 +166,7 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
                   type="button"
                   className={`w-full px-2 py-1 flex items-center gap-2 text-left ${i === activeIndex ? 'bg-[color:var(--ui-hover)]' : 'hover:bg-[color:var(--ui-hover)]'}`}
                   onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => applyEmoji(s.char)}
+                  onClick={() => applyEmoji({ char: s.char, name: s.name })}
                 >
                   <span className="text-base leading-none">{s.char}</span>
                   <span className="ui-label">:{s.name}:</span>
