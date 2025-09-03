@@ -263,13 +263,19 @@ function progressPercent(remaining: number, total: number) {
 }
 
 function Controls({ isRunning, onToggle, onReset, backHref, isLight }: { isRunning: boolean; onToggle: () => void; onReset: () => void; backHref: string; isLight: boolean }) {
-  const containerBorder = isLight ? 'border-black/10' : 'border-white/10'
+  const containerBorder = isLight ? 'border-black/10' : 'border-white/20'
   const btn = isLight
     ? 'text-black/60 hover:text-black bg-black/0 hover:bg-black/10'
-    : 'text-white/40 hover:text-white bg-white/0 hover:bg-white/15'
-  const baseOpacity = isLight ? 'opacity-20' : 'opacity-30'
+    : 'text-white/60 hover:text-white bg-white/0 hover:bg-white/15'
+  const baseOpacity = isLight ? 'opacity-20' : 'opacity-50'
+  const innerGlow = isLight
+    ? 'shadow-[inset_0_0_10px_rgba(0,0,0,0.10)]'
+    : 'shadow-[inset_0_0_12px_rgba(255,255,255,0.12)]'
+  const hoverGlow = isLight
+    ? 'hover:shadow-[inset_0_0_14px_rgba(0,0,0,0.14)] focus-within:shadow-[inset_0_0_14px_rgba(0,0,0,0.14)]'
+    : 'hover:shadow-[inset_0_0_16px_rgba(255,255,255,0.16)] focus-within:shadow-[inset_0_0_16px_rgba(255,255,255,0.16)]'
   return (
-    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5 ${baseOpacity} hover:opacity-100 focus-within:opacity-100 transition-opacity`}>
+    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-transparent border ${containerBorder} rounded-full px-3 py-1.5 ${baseOpacity} hover:opacity-100 focus-within:opacity-100 transition-[opacity,box-shadow] duration-200 ${innerGlow} ${hoverGlow}`}>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onToggle}>{isRunning ? 'Pause' : 'Start'}</button>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={onReset}>Reset</button>
       <button className={`px-3 py-1 rounded-full transition-colors ${btn}`} onClick={toggleFullscreen}>Full-screen</button>
