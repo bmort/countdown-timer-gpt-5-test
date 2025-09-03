@@ -334,10 +334,10 @@ function PreviewTimer() {
       )}
       {days > 0 && (
         <div
-          className={`${fontClass(config.font)} font-bold mb-2`}
-          style={{ color: config.fg, fontSize: `calc(${sizeToPx(config.fs)} * 0.5)` }}
+          className={`${fontClass(config.font)} font-bold`}
+          style={{ color: config.fg, fontSize: `calc(${sizeToPx(config.fs)} * 0.5)`, lineHeight: 1.2, marginBottom: '0.75em' }}
         >
-          ({days} {days === 1 ? 'day' : 'days'})
+          {days} {days === 1 ? 'day' : 'days'}
         </div>
       )}
       <div className="relative inline-block">

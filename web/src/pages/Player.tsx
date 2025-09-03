@@ -35,6 +35,14 @@ export function Player() {
       <div className={`fixed top-4 right-4 z-10 ${config.theme === 'light' ? 'opacity-20' : 'opacity-30'} hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200`}>
         <ThemeToggle />
       </div>
+      {config.title && (
+        <div
+          className={`fixed top-4 left-1/2 -translate-x-1/2 z-10 ${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)}`}
+          style={{ color: config.titleColor ?? (config.bg && config.bg.toLowerCase() === '#ffffff' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
+        >
+          {config.title}
+        </div>
+      )}
       <TimerView />
     </div>
   )
@@ -196,20 +204,12 @@ function TimerView() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center select-none" style={{ color: config.fg, background: config.bg }}>
-      {config.title && (
-        <div
-          className={`${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} ${days > 0 ? 'mb-6' : 'mb-4'}`}
-          style={{ color: config.titleColor ?? (config.bg && config.bg.toLowerCase() === '#ffffff' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
-        >
-          {config.title}
-        </div>
-      )}
       {days > 0 && (
         <div
-          className={`${fontClass(config.font)} font-bold mb-2`}
-          style={{ color: config.fg, fontSize: `${baseVw * scale * 0.5}vw` }}
+          className={`${fontClass(config.font)} font-bold`}
+          style={{ color: config.fg, fontSize: `${baseVw * scale * 0.5}vw`, lineHeight: 1.2, marginBottom: '0.75em' }}
         >
-          ({days} {days === 1 ? 'day' : 'days'})
+          {days} {days === 1 ? 'day' : 'days'}
         </div>
       )}
       <div className="relative">
