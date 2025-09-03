@@ -37,7 +37,7 @@ export function Player() {
       </div>
       {config.title && (
         <div
-          className={`fixed top-10 left-1/2 -translate-x-1/2 z-10 ${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)}`}
+          className={`fixed top-14 left-1/2 -translate-x-1/2 z-10 ${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)}`}
           style={{ color: config.titleColor ?? (config.bg && config.bg.toLowerCase() === '#ffffff' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
         >
           {config.title}
@@ -207,7 +207,7 @@ function TimerView() {
       {days > 0 && (
         <div
           className={`${fontClass(config.font)} font-bold`}
-          style={{ color: config.fg, fontSize: `${baseVw * scale * 0.3}vw`, lineHeight: 1.0, marginBottom: '1em' }}
+          style={{ color: config.fg, fontSize: `${baseVw * scale * 0.3}vw`, lineHeight: 1.0, marginBottom: '0.5em' }}
         >
           {days} {days === 1 ? 'day' : 'days'}
         </div>
