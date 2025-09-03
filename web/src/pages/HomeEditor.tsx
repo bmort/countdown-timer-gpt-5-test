@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useTimerConfig, serializeConfigToQuery, parseDurationToMs } from '../state/config'
+import { useTimerConfig, serializeConfigToQuery, parseDurationToMs, defaultConfig } from '../state/config'
 import { EmojiTitleInput } from '../components/EmojiTitleInput'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { DateTime } from 'luxon'
@@ -15,7 +15,7 @@ const modeOptions: Array<{ value: TimerMode; label: string }> = [
 
 export function HomeEditor() {
   const navigate = useNavigate()
-  const [search] = useSearchParams()
+  const [search, setSearch] = useSearchParams()
   const { config, updateConfig, resetConfig } = useTimerConfig()
   useGoogleFont(config.font)
   useGoogleFont(config.titleFont)
@@ -323,7 +323,11 @@ export function HomeEditor() {
               className="px-4 py-2 rounded-lg border ui-border hover:bg-white/5"
               onClick={() => {
                 const ok = window.confirm('Reset all settings to defaults?')
-                if (ok) resetConfig()
+                if (ok) {
+                  resetConfig()
+                  const qs = serializeConfigToQuery(defaultConfig)
+                  setSearch(new URLSearchParams(qs), { replace: true })
+                }
               }}
             >
               Reset Config
