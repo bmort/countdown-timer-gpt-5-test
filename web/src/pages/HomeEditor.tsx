@@ -519,17 +519,18 @@ function UntilQuickSetDialog({ tz, onClose, onApply }: { tz: string; onClose: ()
   const topOfHour = () => now.plus({ hours: 1 }).set({ minute: 0, second: 0, millisecond: 0 })
   const tomorrowAt = (hour: number) => now.plus({ days: 1 }).set({ hour, minute: 0, second: 0, millisecond: 0 })
 
-  const btn = 'px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-sm'
+  // Dialog is rendered in a dark panel regardless of overall theme to ensure contrast
+  const btn = 'px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/10 text-sm text-white'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative bg-black/95 border border-white/10 rounded-xl p-5 w-full max-w-xl shadow-xl">
+      <div className="relative bg-black/95 border border-white/10 rounded-xl p-5 w-full max-w-xl shadow-xl text-white">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-white/90 font-semibold">Set Target Time</h3>
           <button className="text-white/60 hover:text-white" onClick={onClose}>✕</button>
         </div>
-        <p className="text-sm ui-muted mb-3">Time zone: <span className="ui-label">{tz}</span></p>
+        <p className="text-sm text-white/70 mb-3">Time zone: <span className="text-white/90">{tz}</span></p>
         <div className="grid grid-cols-3 gap-2">
           <button className={btn} onClick={() => onApply(now)}>Now</button>
           <button className={btn} onClick={() => onApply(mk(5))}>+5m</button>
