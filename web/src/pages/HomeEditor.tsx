@@ -217,7 +217,7 @@ export function HomeEditor() {
               <select
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 value={config.titleWeight ?? 'normal'}
-                onChange={(e) => updateConfig({ titleWeight: e.target.value as any })}
+                onChange={(e) => updateConfig({ titleWeight: e.target.value as 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' })}
               >
                 <option value="normal">Normal</option>
                 <option value="medium">Medium</option>
@@ -268,7 +268,7 @@ export function HomeEditor() {
               <select
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
                 value={config.digitWeight ?? 'bold'}
-                onChange={(e) => updateConfig({ digitWeight: e.target.value as any })}
+                onChange={(e) => updateConfig({ digitWeight: e.target.value as 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' })}
               >
                 <option value="normal">Normal</option>
                 <option value="medium">Medium</option>
