@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { EMOJIS } from '../utils/emoji'
+import { loadEmojiData } from '../utils/emojiLoader'
 
 type Props = {
   value: string
@@ -17,16 +18,19 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
   const [query, setQuery] = useState('')
   const [anchorStart, setAnchorStart] = useState<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [fullData, setFullData] = useState<typeof EMOJIS | null>(null)
+  const [loadingFull, setLoadingFull] = useState(false)
 
   const suggestions = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!open) return []
+    const catalog = (fullData && fullData.length > 0) ? fullData : EMOJIS
     if (q === '') {
       // Curated quick picks when no query
-      const quick = ['tada', 'rocket', 'alarm', 'hourglass', 'coffee', 'muscle', 'sparkles', 'star', 'check', 'fire', 'calendar', 'party']
-      return EMOJIS.filter((e) => quick.includes(e.name)).slice(0, 12)
+      const quick = ['tada', 'rocket', 'alarm', 'hourglass', 'coffee', 'muscle', 'sparkles', 'star', 'white_check_mark', 'fire', 'calendar', 'party']
+      return catalog.filter((e) => quick.includes(e.name)).slice(0, 12)
     }
-    const all = EMOJIS.map((e) => {
+    const all = catalog.map((e) => {
       const hay = [e.name, ...(e.aliases ?? [])]
       const starts = hay.some((k) => k.startsWith(q))
       const contains = !starts && hay.some((k) => k.includes(q))
@@ -35,10 +39,10 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
     })
       .filter((s) => s.score > 0)
       .sort((a, b) => b.score - a.score || a.e.name.localeCompare(b.e.name))
-      .slice(0, 12)
+      .slice(0, 20)
       .map((s) => s.e)
     return all
-  }, [open, query])
+  }, [open, query, fullData])
 
   // Track query based on caret position and preceding ':'
   const updateQueryFromCaret = () => {
@@ -63,6 +67,18 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
     updateQueryFromCaret()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
+
+  // Load a comprehensive emoji catalog on demand
+  useEffect(() => {
+    if (!open) return
+    if (fullData || loadingFull) return
+    setLoadingFull(true)
+    loadEmojiData()
+      .then((data) => {
+        if (data.length > 0) setFullData(data as any)
+      })
+      .finally(() => setLoadingFull(false))
+  }, [open, fullData, loadingFull])
 
   const applyEmoji = (emoji: string) => {
     const el = inputRef.current
