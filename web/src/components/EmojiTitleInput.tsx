@@ -21,13 +21,21 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
   const suggestions = useMemo(() => {
     const q = query.trim().toLowerCase()
     if (!open) return []
-    const all = EMOJIS.map((e) => ({
-      score: e.name.startsWith(q) ? 2 : (e.aliases?.some((a) => a.startsWith(q)) ? 1 : 0),
-      e,
-    }))
-      .filter((s) => q === '' || s.score > 0)
+    if (q === '') {
+      // Curated quick picks when no query
+      const quick = ['tada', 'rocket', 'alarm', 'hourglass', 'coffee', 'muscle', 'sparkles', 'star', 'check', 'fire', 'calendar', 'party']
+      return EMOJIS.filter((e) => quick.includes(e.name)).slice(0, 12)
+    }
+    const all = EMOJIS.map((e) => {
+      const hay = [e.name, ...(e.aliases ?? [])]
+      const starts = hay.some((k) => k.startsWith(q))
+      const contains = !starts && hay.some((k) => k.includes(q))
+      const score = starts ? 3 : contains ? 1 : 0
+      return { e, score }
+    })
+      .filter((s) => s.score > 0)
       .sort((a, b) => b.score - a.score || a.e.name.localeCompare(b.e.name))
-      .slice(0, 8)
+      .slice(0, 12)
       .map((s) => s.e)
     return all
   }, [open, query])
