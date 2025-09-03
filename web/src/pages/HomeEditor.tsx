@@ -304,7 +304,7 @@ export function HomeEditor() {
           <div className="aspect-video rounded-lg border ui-border flex items-center justify-center ui-panel">
             <PreviewTimer />
           </div>
-          <div className="flex justify-end gap-3 mt-3">
+          <div className="flex justify-center gap-3 mt-6">
             <button
               onClick={onStart}
               className="px-4 py-2 rounded-lg bg-cyan-500 text-black font-semibold hover:bg-cyan-400"
