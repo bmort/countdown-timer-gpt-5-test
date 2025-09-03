@@ -207,7 +207,7 @@ function TimerView() {
       {days > 0 && (
         <div
           className={`${fontClass(config.font)} font-bold`}
-          style={{ color: config.fg, fontSize: `${baseVw * scale * 0.5}vw`, lineHeight: 1.2, marginBottom: '0.75em' }}
+          style={{ color: config.fg, fontSize: `${baseVw * scale * 0.3}vw`, lineHeight: 1.0, marginBottom: '1em' }}
         >
           {days} {days === 1 ? 'day' : 'days'}
         </div>
