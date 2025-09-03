@@ -198,7 +198,7 @@ function TimerView() {
     <div className="w-full h-full flex flex-col items-center justify-center select-none" style={{ color: config.fg, background: config.bg }}>
       {config.title && (
         <div
-          className={`${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} mb-4`}
+          className={`${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} ${days > 0 ? 'mb-6' : 'mb-4'}`}
           style={{ color: config.titleColor ?? (config.bg && config.bg.toLowerCase() === '#ffffff' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}
         >
           {config.title}
@@ -206,7 +206,7 @@ function TimerView() {
       )}
       {days > 0 && (
         <div
-          className={`${titleFontClass(config.titleFont ?? config.font)} text-2xl mb-2`}
+          className={`${titleFontClass(config.titleFont ?? config.font)} text-3xl mb-2`}
           style={{ color: config.fg }}
         >
           ({days} {days === 1 ? 'day' : 'days'})

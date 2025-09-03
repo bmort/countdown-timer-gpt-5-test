@@ -327,14 +327,14 @@ function PreviewTimer() {
     <div className="text-center w-full">
       {config.title && (
         <div className={
-          `${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} mb-2`
+          `${titleFontClass(config.titleFont ?? config.font)} ${titleSizeClass(config.titleSize)} ${days > 0 ? 'mb-4' : 'mb-2'}`
         } style={{ color: config.titleColor ?? (config.theme === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.7)') }}>
           {config.title}
         </div>
       )}
       {days > 0 && (
         <div
-          className={`${titleFontClass(config.titleFont ?? config.font)} text-base mb-1`}
+          className={`${titleFontClass(config.titleFont ?? config.font)} text-lg mb-2`}
           style={{ color: config.fg }}
         >
           ({days} {days === 1 ? 'day' : 'days'})
