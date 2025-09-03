@@ -162,7 +162,7 @@ export function HomeEditor() {
               <label className="block text-sm ui-label">Title</label>
               <EmojiTitleInput
                 className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
-                placeholder="Break"
+                placeholder="Add title here, use : for emojis"
                 value={title}
                 onChange={(v) => { setTitle(v); updateConfig({ title: v }) }}
               />
