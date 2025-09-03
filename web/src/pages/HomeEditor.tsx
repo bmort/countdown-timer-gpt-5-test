@@ -30,6 +30,7 @@ export function HomeEditor() {
 
   const [title, setTitle] = useState(config.title ?? '')
   useEffect(() => setTitle(config.title ?? ''), [config.title])
+  const titleEmpty = (title ?? '').trim() === ''
 
   // Apply theme class to body so the entire page, including config, switches theme
   useEffect(() => {
@@ -181,9 +182,10 @@ export function HomeEditor() {
             <div>
               <label className="block text-sm ui-label">Title Font</label>
               <select
-                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 value={config.titleFont ?? config.font}
                 onChange={(e) => updateConfig({ titleFont: e.target.value })}
+                disabled={titleEmpty}
               >
                 {fontOptions.map((f) => (
                   <option key={f.value} value={f.value}>{f.label}</option>
@@ -193,9 +195,10 @@ export function HomeEditor() {
             <div>
               <label className="block text-sm ui-label">Title Size</label>
               <select
-                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 value={config.titleSize ?? 'm'}
                 onChange={(e) => updateConfig({ titleSize: e.target.value as 's' | 'm' | 'l' | 'xl' })}
+                disabled={titleEmpty}
               >
                 <option value="s">Small</option>
                 <option value="m">Medium</option>
@@ -207,17 +210,19 @@ export function HomeEditor() {
               <label className="block text-sm ui-label">Title Color</label>
               <input
                 type="color"
-                className="px-3 py-2 rounded-lg ui-input border ui-border w-full h-10"
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full h-10 disabled:opacity-50 disabled:cursor-not-allowed"
                 value={config.titleColor ?? '#9CA3AF'}
                 onChange={(e) => updateConfig({ titleColor: e.target.value })}
+                disabled={titleEmpty}
               />
             </div>
             <div>
               <label className="block text-sm ui-label">Title Weight</label>
               <select
-                className="px-3 py-2 rounded-lg ui-input border ui-border w-full"
+                className="px-3 py-2 rounded-lg ui-input border ui-border w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 value={config.titleWeight ?? 'normal'}
                 onChange={(e) => updateConfig({ titleWeight: e.target.value as 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold' })}
+                disabled={titleEmpty}
               >
                 <option value="normal">Normal</option>
                 <option value="medium">Medium</option>
