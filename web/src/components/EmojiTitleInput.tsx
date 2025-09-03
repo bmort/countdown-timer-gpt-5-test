@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { EMOJIS } from '../utils/emoji'
+import type { EmojiDef } from '../utils/emoji'
 import { loadEmojiData } from '../utils/emojiLoader'
 
 type Props = {
@@ -18,7 +19,7 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
   const [query, setQuery] = useState('')
   const [anchorStart, setAnchorStart] = useState<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
-  const [fullData, setFullData] = useState<typeof EMOJIS | null>(null)
+  const [fullData, setFullData] = useState<EmojiDef[] | null>(null)
   const [loadingFull, setLoadingFull] = useState(false)
   const [recents, setRecents] = useState<{ char: string; name: string }[]>([])
 
@@ -83,7 +84,7 @@ export function EmojiTitleInput({ value, onChange, placeholder, className, onBlu
     setLoadingFull(true)
     loadEmojiData()
       .then((data) => {
-        if (data.length > 0) setFullData(data as any)
+        if (data.length > 0) setFullData(data)
       })
       .finally(() => setLoadingFull(false))
   }, [open, fullData, loadingFull])

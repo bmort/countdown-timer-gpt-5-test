@@ -7,8 +7,7 @@ export type FullEmoji = {
   shortcodes?: string[]
   tags?: string[]
 }
-
-export type EmojiDef = { name: string; char: string; aliases?: string[] }
+import type { EmojiDef } from './emoji'
 
 let cache: EmojiDef[] | null = null
 let inflight: Promise<EmojiDef[]> | null = null
@@ -17,8 +16,8 @@ export async function loadEmojiData(): Promise<EmojiDef[]> {
   if (cache) return cache
   if (inflight) return inflight
   inflight = import('emojibase-data/en/data.json')
-    .then((mod) => {
-      const data: FullEmoji[] = (mod as any).default ?? (mod as any)
+    .then((mod: unknown) => {
+      const data = extractDataArray(mod)
       const mapped: EmojiDef[] = data.map((e) => {
         const baseName = (e.shortcodes?.[0] || e.label || '').toLowerCase().replace(/\s+/g, '_')
         const aliases = Array.from(
@@ -43,3 +42,13 @@ export async function loadEmojiData(): Promise<EmojiDef[]> {
   return inflight
 }
 
+function extractDataArray(mod: unknown): FullEmoji[] {
+  if (Array.isArray(mod)) {
+    return mod as FullEmoji[]
+  }
+  if (typeof mod === 'object' && mod !== null) {
+    const maybe = (mod as { default?: unknown }).default
+    if (Array.isArray(maybe)) return maybe as FullEmoji[]
+  }
+  return []
+}
